@@ -7,5 +7,6 @@ class Model643:
         return text+','+text
     
     def disconnect_usb(self):
+        print('fake Model643 disconnected')
         pass
     
