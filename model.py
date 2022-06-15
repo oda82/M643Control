@@ -22,9 +22,10 @@ class M643_thread(threading.Thread):
             self.m643.command('SETI 0')
             
     def set_stop(self):
-        #остановить изменение тока магнита в течении 2сек    
+        #остановить изменение тока магнита в течении 2сек
         with self._lock:
             self.m643.command('STOP')
+        
         
     def set_rate_i(self, i):
         #установить скорость изменения тока магнита 0.0001 A/s through 50.000 A/s.
@@ -60,9 +61,9 @@ class M643_thread(threading.Thread):
                 #send commands
                 
                 #model.update_data()
-                if self.model.update_data:
-                    self.model.update_data()
-            sleep(5) #поменять на меньшее время
+            if self.model.update_data:
+                self.model.update_data()
+            sleep(1) #поменять на меньшее время
         
     
 class Model:
@@ -106,9 +107,9 @@ class Model:
         
     def stop_thread(self):
         #остановить поток
-        self.m643.stop = True
-        self.m643.join() #дождаться завершения потока
-        self.m643.stop = False
+        self.m643_thread.stop = True
+        self.m643_thread.join() #дождаться завершения потока
+        self.m643_thread.stop = False
         
 #     def update_data(self):
 #         #прописать сюда метод контролера для обновления данных в отображении
