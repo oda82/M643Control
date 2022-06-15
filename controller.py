@@ -26,31 +26,36 @@ class Controller:
         pass
     
     def connect(self, evnt):
+        #print('controller connect 1')
         self.model.connect_m643()
+        #print('controller connect 2')
         
     def disconnect(self, evnt):
+        #print('discontroller connect 1')
         self.model.disconnect_m643()
+        #print('discontroller connect 2')
     
     def set_i(self, evnt):
         i = float(self.view.ent_i.get())
-        self.model.m643.set_i(i)
+        self.model.m643_thread.set_i(i)
         
     def set_zero(self, evnt):
-        self.model.m643.set_zero()
+        self.model.m643_thread.set_zero()
         
     def set_ramp(self, evnt):
         i = float(self.view.ent_ramp.get())
-        self.model.m643.set_rate_i(i)
+        self.model.m643_thread.set_rate_i(i)
 
     def set_stop(self, evnt):
-        self.model.m643.set_stop()
+        print('controller set_stop')
+        self.model.m643_thread.set_stop()
         
     
     def update_view(self):
-        s = 'Serial number: {}\n Output I: {}\n Output V: {}\n Limit I: {}\n Limit Rate: {}\n Set I: {}\n Set Rate: {}'
-        .format(self.model.id, self.model.out_i, self.model.out_v, self.model.lim_i, self.model.lim_rate, self.model.set_i, self.model.rate_i)
-        print(s)
-        self.view.lbl_status.set(s)
+        s = 'Serial number: {}\n Output I: {}\n Output V: {}\n Limit I: {}\n Limit Rate: {}\n Set I: {}\n Set Rate: {}'.format(
+            self.model.id, self.model.out_i, self.model.out_v, self.model.lim_i, self.model.lim_rate, self.model.set_i, self.model.rate_i)
+        #print(s)
+        self.view.lbl_status['text'] = s
         pass
         
 
