@@ -1,4 +1,9 @@
 class Model643:
+    def __init__(self):
+        self.firmware_version = 'firmware_version'
+        self.serial_number = 'Serial Number'
+        self.model_number = 'Model Number'
+        
     def command(self, text):
         print('fake command Model643:'+text)
         
@@ -7,6 +12,5 @@ class Model643:
         return text+','+text
     
     def disconnect_usb(self):
-        print('fake Model643 disconnected')
         pass
     

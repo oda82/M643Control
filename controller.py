@@ -10,6 +10,7 @@ class Controller:
         self.model.update_data = self.update_view # оппределить калбэк при обновлении модели
         #подключение отображений
         self.window = tk.Tk()
+        self.window.title('Model 643 Controller')
         self.view = M643_view(self.window, self)
         self.view.pack()
         #связать управление в отображении
@@ -23,38 +24,44 @@ class Controller:
         self.view.btn_set_i.bind("<Button-1>", self.set_i)
         self.view.btn_set_zero.bind("<Button-1>", self.set_zero)
         self.view.btn_stop.bind("<Button-1>", self.set_stop)
+        self.view.btn_set_limit.bind("<Button-1>", self.set_limit)
         pass
     
-    def connect(self, evnt):
+    def connect(self, event):
         #print('controller connect 1')
-        self.model.connect_m643()
+        self.model.connect_m643(start_thread = True)
         #print('controller connect 2')
         
-    def disconnect(self, evnt):
+    def disconnect(self, event):
         #print('discontroller connect 1')
         self.model.disconnect_m643()
         #print('discontroller connect 2')
     
-    def set_i(self, evnt):
+    def set_i(self, event):
         i = float(self.view.ent_i.get())
-        self.model.m643_thread.set_i(i)
+        self.model.set_i(i)
         
-    def set_zero(self, evnt):
-        self.model.m643_thread.set_zero()
+    def set_zero(self, event):
+        self.model.set_zero()
         
-    def set_ramp(self, evnt):
+    def set_ramp(self, event):
         i = float(self.view.ent_ramp.get())
-        self.model.m643_thread.set_rate_i(i)
+        self.model.set_rate_i(i)
 
-    def set_stop(self, evnt):
+    def set_stop(self, event):
         print('controller set_stop')
-        self.model.m643_thread.set_stop()
-        
+        self.model.set_stop()
+    
+    def set_limit(self, event):
+        i, rate = self.view.ent_limit.get().split(',')
+        self.model.set_limit(int(i), int(rate))
     
     def update_view(self):
-        s = 'Serial number: {}\n Output I: {}\n Output V: {}\n Limit I: {}\n Limit Rate: {}\n Set I: {}\n Set Rate: {}'.format(
-            self.model.id, self.model.out_i, self.model.out_v, self.model.lim_i, self.model.lim_rate, self.model.set_i, self.model.rate_i)
-        #print(s)
+        #Вывести состояние прибора на окно
+        s = ''
+        for key, value in self.model.m643_data.items():
+            s = s + key + ' : ' + value + '\n'
+        print(s)
         self.view.lbl_status['text'] = s
         pass
         

@@ -5,7 +5,7 @@ class M643_view(tk.Frame):
     
     def __init__(self, window, ctrl):
         super().__init__(window)
-        self.WIDTH = 10
+        self.WIDTH = 15
         
         self.ctrl = ctrl #контроллет
         self.add_widgets()
@@ -13,15 +13,23 @@ class M643_view(tk.Frame):
     def add_widgets(self):
         
         #row 0 label
-        self.lbl_status = tk.Label(self, text='Output I \n Out V \n Limit')
-        self.lbl_status.grid(row=0, column=0)
+        self.lbl_status = tk.Label(self, text='Output I \n Out V \n Limit', bg='red')
+        self.lbl_status.grid(row=0, column=0, sticky = 'we')
                 
-        #row5 button connect disconnect
+        #row4 button connect disconnect
         self.btn_connect = tk.Button(self, text='Connect', width = self.WIDTH)
-        self.btn_connect.grid(row=5, column=0)
+        self.btn_connect.grid(row=4, column=0)
         
         self.btn_disconnect = tk.Button(self, text='Disconnect', width=self.WIDTH) #, state='disabled'
-        self.btn_disconnect.grid(row=5, column=1)
+        self.btn_disconnect.grid(row=4, column=1)
+        
+        #row5 set limit 
+        self.btn_set_limit = tk.Button(self, text='Set Limit (I, Rate)', width=self.WIDTH)
+        self.btn_set_limit.grid(row=5, column=0)
+        
+        self.ent_limit = tk.Entry(self, width=self.WIDTH)
+        self.ent_limit.grid(row=5, column=1)
+        
         #row6 Set ramp
         self.btn_set_ramp = tk.Button(self, text='Ramp Rate', width=self.WIDTH)
         self.btn_set_ramp.grid(row=6, column=0)
@@ -46,5 +54,6 @@ class M643_view(tk.Frame):
 
 if __name__ == '__main__':
     window = tk.Tk()
+    window.title('Model 643 Controller')
     M643_view(window,None).pack()
     window.mainloop()
