@@ -3,8 +3,8 @@ import tkinter as tk
 
 class M643_view(tk.Frame):
     
-    def __init__(self, window, ctrl):
-        super().__init__(window)
+    def __init__(self, root, ctrl):
+        super().__init__(root)
         self.WIDTH = 15
         
         self.ctrl = ctrl #контроллет
@@ -53,7 +53,7 @@ class M643_view(tk.Frame):
 
 
 if __name__ == '__main__':
-    window = tk.Tk()
-    window.title('Model 643 Controller')
-    M643_view(window,None).pack()
-    window.mainloop()
+    root = tk.Tk()
+    root.title('Model 643 Controller')
+    M643_view(root,None).pack()
+    root.mainloop()

@@ -1,37 +1,36 @@
-from _lakeshore import Model643
+from lakeshore import Model643
 from time import sleep
 import threading
  
 class M643_thread(threading.Thread):
-    #передать объект модели для обратной связи
-    def __init__(self, model, fps=2):
+    
+    def __init__(self, model, fps=1):
         super().__init__()
         self.stop = False
-        self.model = model
+        self.model = model # объект модели для обратной связи
         self.fps = fps #частота обновления данных с прибора
     
     def run(self):
-        print(self.stop, self.model.m643)
+        #print(self.stop, self.model.m643)
         #если прибор подключен и поток работает
         while not self.stop and self.model.m643:
-                #read m643 --> write model
+            #read m643 --> write model
             self.model.get_out_i()
             self.model.get_out_v()
             self.model.get_limit()
             self.model.get_set_i()
             self.model.get_rate_i()
-                
-                #model.update_data()
+            # если задана функция обновления то вызвать    
             if self.model.update_data:
                 self.model.update_data()
-            sleep(self.fps) #поменять на меньшее время
+            sleep(1 / self.fps) #поменять на меньшее время
         
     
 class Model:
-    def __init__(self, ctrl):
+    def __init__(self, ctrl=None):
         self.ctrl = ctrl #pointer to controler
         
-        self.update_data = None  #observer method
+        self.update_data = None  #указатель на метод для обновления данных
         
         self.m643 = None # pointer to Model643 module
         self.m643_delay = 0.05 #задержка между командами 5.3.5 Message Flow Control
@@ -63,16 +62,19 @@ class Model:
     def disconnect_m643(self):
         # отключить прибор
         #stop thread m643
+        print('stoping thread')
         if self.m643_thread:
             self.stop_thread()
+        print('thread stopped')
         #отключить прибор
+        
         if self.m643:
             self.m643.disconnect_usb()
             self.m643 = None
             self.m643_data['state'] ='disconnected'
-        
+        print('usb disconnected')
     
-    def start_thread(self, fps=2):
+    def start_thread(self, fps=1):
         # создать поток считывания с прибора и запустить его
         if self.m643:  #если прибор подключен запустить поток считывания
             self.m643_thread = M643_thread(self, fps)
@@ -88,11 +90,6 @@ class Model:
         self.m643_thread.stop = False
         self.m643_thread = None
         
-#     def update_data(self):
-#         #прописать сюда метод контролера для обновления данных в отображении
-#         print('update_data')
-#         #print( self.out_i, self.out_v, self.lim_i, self.lim_rate, self.set_i, self.rate_i, self.id)
-
     #import frpm M643_thread
     # m643 commands
     def set_i(self, i):
